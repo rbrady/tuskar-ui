@@ -24,6 +24,8 @@ from horizon import forms as horizon_forms
 from horizon import tabs as horizon_tabs
 from horizon.utils import memoized
 from openstack_dashboard.api import glance
+import pdb
+
 
 from tuskar_ui import api
 from tuskar_ui.infrastructure.nodes import forms
@@ -77,10 +79,14 @@ class IndexView(infrastructure_views.ItemCountMixin,
             'ajax_modal': True,
         }
         context['header_actions'] = [register_action]
+        context['dummy_nodes'] = ['compute.boston.1', 'compute.boston.2',
+                                  'compute.boston.3', 'controller.boston.1',
+                                  'controller.boston.2']
         return context
 
     @memoized.memoized_method
     def get_data(self):
+        # pdb.set_trace()
         return api.node.Node.list(self.request)
 
     def get_tabs(self, request, **kwargs):

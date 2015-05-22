@@ -100,6 +100,32 @@ class UpdateRoleInfoAction(workflows.Action):
         }
 
 
+class UpdateRoleNetworkConfigAction(workflows.Action):
+    class Meta(object):
+        name = _("Network Configuration")
+        slug = 'update_role_network'
+        help_text = _("Edit the role's network configuration.")
+
+    network_choices = (
+        ('1', 'POC'),
+        ('2', 'Production'),
+    )
+
+    topology = forms.ChoiceField(
+        label=_("Topology"),
+        choices=network_choices,
+    )
+
+    config_yaml = forms.CharField(
+        label=_("Configuration Data"),
+        widget=django.forms.Textarea(attrs={'ng-disabled': 'checked'})
+    )
+
+    def __init__(self, request, context, *args, **kwargs):
+        super(UpdateRoleNetworkConfigAction, self).__init__(request, context,
+                                                            *args, **kwargs)
+
+
 class UpdateRoleConfigAction(workflows.Action):
     class Meta(object):
         name = _("Service Configuration")
@@ -133,6 +159,13 @@ class UpdateRoleConfig(workflows.Step):
     template_name = 'infrastructure/roles/config.html'
 
 
+class UpdateRoleNetwork(workflows.Step):
+    action_class = UpdateRoleNetworkConfigAction
+    depends_on = ("role_id", "name")
+    contributes = ("topology",)
+    template_name = 'infrastructure/roles/network.html'
+
+
 class UpdateRole(workflows.Workflow):
     slug = "update_role"
     finalize_button_name = _("Save")
@@ -141,6 +174,7 @@ class UpdateRole(workflows.Workflow):
     index_url = "horizon:infrastructure:roles:index"
     default_steps = (
         UpdateRoleInfo,
+        UpdateRoleNetwork,
         UpdateRoleConfig,
     )
     success_url = reverse_lazy(

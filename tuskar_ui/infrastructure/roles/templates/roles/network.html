@@ -1,0 +1,13 @@
+<noscript><h3>{{ step }}</h3></noscript>
+<div class="row">
+    <div class="col-sm-8">
+      <div class="form form-horizontal">
+        {% include "horizon/common/_horizontal_fields.html" %}
+      </div>
+    </div>
+    <label><input type="checkbox" ng-model="checked" checked/>Lock Configuration</label>
+    <div class="col-sm-4">
+      {{ step.get_help_text }}
+    </div>
+</div>
+

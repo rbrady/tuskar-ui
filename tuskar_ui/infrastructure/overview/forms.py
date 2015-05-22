@@ -299,7 +299,9 @@ class DeployOvercloud(horizon.forms.SelfHandlingForm):
 
         # Validate plan and create stack
         for message in validate_plan(request, plan):
-            if message['is_critical']:
+            #print(message)
+            #if message['is_critical']:
+            if 'is_critical' in message:
                 horizon.messages.success(request, message.text)
                 return False
         try:
